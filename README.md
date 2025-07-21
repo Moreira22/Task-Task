@@ -7,6 +7,18 @@ Este sistema é uma aplicação para gerenciamento colaborativo de tarefas, onde
 
 ---
 
+## Diagramas
+
+### Diagrama de Classe
+
+![Diagrama de Classe](docs/diagrama-classe.png)
+
+### Diagrama de Banco de Dados
+
+![Diagrama de Banco de Dados](docs/diagrama-banco.png)
+
+---
+
 ## Principais Entidades
 
 ### Usuário
@@ -40,11 +52,11 @@ Mensagens adicionadas às tarefas para comunicação entre usuários. Comentári
 
 ---
 
-## Tecnologias (exemplo)
+## Tecnologias
 
-- Backend: Java Spring Boot / Node.js / Python Django
-- Frontend: React / Angular / Vue.js
-- Banco de Dados: PostgreSQL / MySQL / MongoDB
+- Backend: Java Spring Boot 
+- Frontend: React / Next.js
+- Banco de Dados: PostgreSQL 
 
 ---
 
