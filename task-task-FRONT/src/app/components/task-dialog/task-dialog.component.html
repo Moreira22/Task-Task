@@ -1,0 +1,202 @@
+<div class="task-dialog">
+  <mat-dialog-content>
+    <mat-tab-group>
+      <!-- Detalhes da Tarefa -->
+      <mat-tab label="Detalhes">
+        <div class="tab-content">
+          <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Título da Tarefa</mat-label>
+              <input matInput formControlName="title" placeholder="Digite o título da tarefa">
+              <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+                Título é obrigatório
+              </mat-error>
+              <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+                Título deve ter pelo menos 3 caracteres
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descrição</mat-label>
+              <textarea 
+                matInput 
+                formControlName="description" 
+                placeholder="Descreva a tarefa..."
+                rows="4">
+              </textarea>
+            </mat-form-field>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Prioridade</mat-label>
+                <mat-select formControlName="priority">
+                  <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+                    <div class="priority-option">
+                      <div class="priority-color" [style.background-color]="priority.color"></div>
+                      {{ priority.label }}
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Data de Vencimento</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="dueDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Usuários Atribuídos</mat-label>
+              <mat-select formControlName="assignedUsers" multiple>
+                <mat-option *ngFor="let user of data.users" [value]="user.id">
+                  {{ user.name }} ({{ user.email }})
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Tags</mat-label>
+              <input 
+                matInput 
+                formControlName="tags" 
+                placeholder="Separe as tags por vírgula">
+              <mat-hint>Exemplo: frontend, urgente, bug</mat-hint>
+            </mat-form-field>
+          </form>
+        </div>
+      </mat-tab>
+
+      <!-- Comentários -->
+      <mat-tab label="Comentários" *ngIf="isEditMode">
+        <div class="tab-content">
+          <div class="comments-section">
+            <div class="comments-list" *ngIf="data.task?.comments.length; else noComments">
+              <div *ngFor="let comment of data.task.comments" class="comment-item">
+                <div class="comment-header">
+                  <mat-icon class="user-icon">account_circle</mat-icon>
+                  <span class="comment-author">{{ getUserName(comment.userId) }}</span>
+                  <span class="comment-date">{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <div class="comment-content">{{ comment.content }}</div>
+              </div>
+            </div>
+            
+            <ng-template #noComments>
+              <div class="no-comments">
+                <mat-icon>comment</mat-icon>
+                <p>Nenhum comentário ainda</p>
+              </div>
+            </ng-template>
+
+            <div class="add-comment">
+              <mat-form-field appearance="outline" class="comment-input">
+                <mat-label>Adicionar comentário</mat-label>
+                <textarea 
+                  matInput 
+                  [(ngModel)]="newComment" 
+                  placeholder="Digite seu comentário..."
+                  rows="3">
+                </textarea>
+              </mat-form-field>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="addComment()"
+                [disabled]="!newComment.trim()">
+                <mat-icon>send</mat-icon>
+                Comentar
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Anexos -->
+      <mat-tab label="Anexos" *ngIf="isEditMode">
+        <div class="tab-content">
+          <div class="attachments-section">
+            <div class="upload-area">
+              <input 
+                type="file" 
+                #fileInput 
+                (change)="onFileSelected($event)" 
+                multiple 
+                style="display: none">
+              
+              <button 
+                mat-stroked-button 
+                (click)="fileInput.click()" 
+                class="upload-button">
+                <mat-icon>attach_file</mat-icon>
+                Selecionar Arquivos
+              </button>
+
+              <div *ngIf="selectedFiles.length > 0" class="selected-files">
+                <h4>Arquivos Selecionados:</h4>
+                <div *ngFor="let file of selectedFiles" class="selected-file">
+                  <mat-icon>description</mat-icon>
+                  <span>{{ file.name }} ({{ formatFileSize(file.size) }})</span>
+                </div>
+                <button 
+                  mat-raised-button 
+                  color="primary" 
+                  (click)="uploadFiles()"
+                  class="upload-confirm">
+                  <mat-icon>cloud_upload</mat-icon>
+                  Fazer Upload
+                </button>
+              </div>
+            </div>
+
+            <div class="attachments-list" *ngIf="data.task?.attachments.length; else noAttachments">
+              <h4>Anexos da Tarefa:</h4>
+              <div *ngFor="let attachment of data.task.attachments" class="attachment-item">
+                <mat-icon class="file-icon">description</mat-icon>
+                <div class="attachment-info">
+                  <div class="attachment-name">{{ attachment.fileName }}</div>
+                  <div class="attachment-meta">
+                    {{ formatFileSize(attachment.fileSize) }} • 
+                    Enviado por {{ getUserName(attachment.uploadedBy) }} • 
+                    {{ attachment.uploadedAt | date:'dd/MM/yyyy HH:mm' }}
+                  </div>
+                </div>
+                <div class="attachment-actions">
+                  <button mat-icon-button matTooltip="Download">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                  <button 
+                    mat-icon-button 
+                    matTooltip="Remover" 
+                    (click)="removeAttachment(attachment.id)"
+                    class="delete-button">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <ng-template #noAttachments>
+              <div class="no-attachments">
+                <mat-icon>attach_file</mat-icon>
+                <p>Nenhum anexo ainda</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onSubmit()"
+      [disabled]="taskForm.invalid">
+      {{ isEditMode ? 'Atualizar' : 'Criar' }} Tarefa
+    </button>
+  </mat-dialog-actions>
+</div>

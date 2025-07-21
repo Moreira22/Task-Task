@@ -1,0 +1,149 @@
+<div class="task-board-container">
+  <mat-toolbar color="primary" class="board-header">
+    <mat-toolbar-row>
+      <span>Sistema de Gerenciamento de Tarefas</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="accent" (click)="openBlockDialog()">
+        <mat-icon>add</mat-icon>
+        Novo Bloco
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="board-content" cdkDropListGroup>
+    <div class="blocks-container">
+      <div 
+        *ngFor="let block of blocks; trackBy: trackByBlockId" 
+        class="block-column"
+        [attr.data-block-id]="block.id"
+      >
+        <mat-card class="block-card">
+          <mat-card-header class="block-header">
+            <div class="block-title-container">
+              <div class="block-color-indicator" [style.background-color]="block.color"></div>
+              <mat-card-title class="block-title">{{ block.title }}</mat-card-title>
+              <mat-chip class="task-count">{{ block.tasks.length }}</mat-chip>
+            </div>
+            
+            <div class="block-actions">
+              <button mat-icon-button [matMenuTriggerFor]="blockMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #blockMenu="matMenu">
+                <button mat-menu-item (click)="openBlockDialog(block)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Editar Bloco</span>
+                </button>
+                <button mat-menu-item (click)="deleteBlock(block.id)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  <span>Excluir Bloco</span>
+                </button>
+              </mat-menu>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content class="block-content">
+            <button 
+              mat-stroked-button 
+              class="add-task-btn"
+              (click)="openTaskDialog(undefined, block.id)"
+            >
+              <mat-icon>add</mat-icon>
+              Nova Tarefa
+            </button>
+
+            <div 
+              class="tasks-container"
+              cdkDropList
+              [cdkDropListData]="block.tasks"
+              (cdkDropListDropped)="onTaskDrop($event)"
+            >
+              <div 
+                *ngFor="let task of block.tasks; trackBy: trackByTaskId"
+                class="task-item"
+                cdkDrag
+              >
+                <mat-card class="task-card" [class.dragging]="false">
+                  <mat-card-header class="task-header">
+                    <div class="task-title-container">
+                      <mat-card-title class="task-title">{{ task.title }}</mat-card-title>
+                      <div class="priority-indicator">
+                        <mat-icon 
+                          [style.color]="getPriorityColor(task.priority)"
+                          [matTooltip]="'Prioridade: ' + task.priority"
+                        >
+                          {{ getPriorityIcon(task.priority) }}
+                        </mat-icon>
+                      </div>
+                    </div>
+                    
+                    <div class="task-actions">
+                      <button mat-icon-button [matMenuTriggerFor]="taskMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #taskMenu="matMenu">
+                        <button mat-menu-item (click)="openTaskDialog(task)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Editar Tarefa</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteTask(task.id)" class="delete-option">
+                          <mat-icon>delete</mat-icon>
+                          <span>Excluir Tarefa</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </mat-card-header>
+
+                  <mat-card-content class="task-content">
+                    <p class="task-description" *ngIf="task.description">
+                      {{ task.description }}
+                    </p>
+
+                    <div class="task-tags" *ngIf="task.tags.length > 0">
+                      <mat-chip *ngFor="let tag of task.tags" class="task-tag">
+                        {{ tag }}
+                      </mat-chip>
+                    </div>
+
+                    <div class="task-assignees" *ngIf="task.assignedUsers.length > 0">
+                      <div class="assignees-label">Atribuído a:</div>
+                      <div class="assignees-avatars">
+                        <mat-icon 
+                          *ngFor="let userId of task.assignedUsers.slice(0, 3)" 
+                          class="user-avatar"
+                          [matTooltip]="getUserById(userId)?.name || 'Usuário'"
+                        >
+                          account_circle
+                        </mat-icon>
+                        <span *ngIf="task.assignedUsers.length > 3" class="more-assignees">
+                          +{{ task.assignedUsers.length - 3 }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="task-footer">
+                      <div class="task-stats">
+                        <span class="stat-item" *ngIf="task.comments.length > 0">
+                          <mat-icon>comment</mat-icon>
+                          {{ task.comments.length }}
+                        </span>
+                        <span class="stat-item" *ngIf="task.attachments.length > 0">
+                          <mat-icon>attach_file</mat-icon>
+                          {{ task.attachments.length }}
+                        </span>
+                      </div>
+                      
+                      <div class="task-date">
+                        {{ task.createdAt | date:'dd/MM/yyyy' }}
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
