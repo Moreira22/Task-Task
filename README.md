@@ -11,11 +11,11 @@ Este sistema é uma aplicação para gerenciamento colaborativo de tarefas, onde
 
 ### Diagrama de Classe
 
-![Diagrama de Classe](docs/diagrama-classe.png)
+![Diagrama de Classe](diagrama-classe.png)
 
 ### Diagrama de Banco de Dados
 
-![Diagrama de Banco de Dados](docs/diagrama-banco.png)
+![Diagrama de Banco de Dados](diagrama-banco.png)
 
 ---
 
