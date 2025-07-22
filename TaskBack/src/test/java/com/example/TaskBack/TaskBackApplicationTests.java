@@ -1,10 +1,10 @@
-package com.example.Task;
+package com.example.TaskBack;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TaskApplicationTests {
+class TaskBackApplicationTests {
 
 	@Test
 	void contextLoads() {

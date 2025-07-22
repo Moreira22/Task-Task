@@ -1,13 +1,13 @@
-package com.example.Task;
+package com.example.TaskBack;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TaskApplication {
+public class TaskBackApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TaskApplication.class, args);
+		SpringApplication.run(TaskBackApplication.class, args);
 	}
 
 }
