@@ -1,5 +1,6 @@
 package com.example.TaskBack.service.DTO;
 
+import com.example.TaskBack.domain.Usuario;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,5 +21,5 @@ public class GrupoDTO implements Serializable{
 
     private String nome;
 
-    private List<Integer> usuarios;
+    private List<Usuario> usuarios;
 }

@@ -1,6 +1,7 @@
 package com.example.TaskBack.repository;
 
 import com.example.TaskBack.domain.Grupo;
+import com.example.TaskBack.service.DTO.GrupoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Integer>{
+    @Query("SELECT NEW com.example.TaskBack.service.DTO.GrupoDTO(" +
+            "g.idGrupo, g.nome, g.usuarios) " +
+            "FROM Grupo g")
+    List<GrupoDTO> listAll();
 }

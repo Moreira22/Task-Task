@@ -1,5 +1,6 @@
 package com.example.TaskBack.repository;
 import com.example.TaskBack.domain.Bloco;
+import com.example.TaskBack.service.DTO.BlocoDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,4 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface BlocoRepository extends JpaRepository<Bloco, Integer>{
+    @Query("SELECT NEW com.example.TaskBack.service.DTO.BlocoDTO(" +
+            "b.idBloco, b.nome, b.criadoPor.idUsuario, b.grupo.idGrupo) " +
+            "FROM Bloco b")
+    List<BlocoDTO> listAll();
 }
