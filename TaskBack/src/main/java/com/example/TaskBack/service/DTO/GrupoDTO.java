@@ -1,0 +1,24 @@
+package com.example.TaskBack.service.DTO;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.io.Serializable;
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class GrupoDTO implements Serializable{
+    private Integer idGrupo;
+
+    private String nome;
+
+    private List<Integer> usuarios;
+}
