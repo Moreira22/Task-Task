@@ -9,11 +9,11 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface GrupoMapper extends EntityMapper<GrupoDTO, Grupo>{
     @Override
-    @Mapping(source = "usuarios.idUsuario", target = "usuarios")
+    @Mapping(source = "usuarios", target = "usuarios")
     GrupoDTO toDto(Grupo entity);
 
     @Override
     @InheritInverseConfiguration
-    @Mapping(source = "usuarios", target = "usuarios.idUsuario")
+    @Mapping(source = "usuarios", target = "usuarios")
     Grupo toEntity(GrupoDTO dto);
 }

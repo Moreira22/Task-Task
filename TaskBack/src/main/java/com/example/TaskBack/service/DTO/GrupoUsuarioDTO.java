@@ -16,8 +16,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class GrupoUsuarioDTO implements Serializable {
 
-    private Integer id;
-
     private Integer usuario;
 
     private Integer grupo;
