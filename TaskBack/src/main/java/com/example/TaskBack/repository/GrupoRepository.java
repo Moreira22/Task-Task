@@ -12,8 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Integer>{
-    @Query("SELECT NEW com.example.TaskBack.service.DTO.GrupoDTO(" +
-            "g.idGrupo, g.nome, g.usuarios) " +
-            "FROM Grupo g")
+    @Query("SELECT g FROM Grupo g")
     List<GrupoDTO> listAll();
 }
