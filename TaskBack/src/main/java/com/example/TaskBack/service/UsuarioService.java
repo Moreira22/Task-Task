@@ -24,8 +24,8 @@ public class UsuarioService {
 
     public UsuarioDTO findByID(Integer id) {return mapper.toDto(findEntity(id));}
 
-    public UsuarioDTO save(UsuarioDTO bebidaDTO) {
-        Usuario usuario = mapper.toEntity(bebidaDTO);
+    public UsuarioDTO save(UsuarioDTO dto) {
+        Usuario usuario = mapper.toEntity(dto);
         usuario = repository.save(usuario);
         return mapper.toDto(usuario);
     }
