@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface GrupoRepository extends JpaRepository<Grupo, Integer>{
-    @Query("SELECT g FROM Grupo g")
-    List<GrupoDTO> listAll();
+    @Query("SELECT DISTINCT g FROM Grupo g LEFT JOIN FETCH g.usuarios")
+    List<Grupo> findAllWithUsuarios();
+
 }

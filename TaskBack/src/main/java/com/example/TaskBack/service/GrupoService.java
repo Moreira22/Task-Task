@@ -1,6 +1,7 @@
 package com.example.TaskBack.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.TaskBack.domain.Grupo;
 import com.example.TaskBack.service.DTO.GrupoDTO;
@@ -31,10 +32,19 @@ public class GrupoService {
         return mapper.toDto(grupo);
     }
 
-    public List<GrupoDTO> findAll() {return repository.listAll();}
+    public List<GrupoDTO> listAllGrupos() {
+        return repository.findAllWithUsuarios()
+                .stream()
+                .map(grupo -> new GrupoDTO(grupo.getIdGrupo(), grupo.getNome(), grupo.getUsuarios()))
+                .collect(Collectors.toList());
+    }
 
     public void delete(Integer id) {
         Grupo grupo = findEntity(id);
+        // Remove associações para evitar ConstraintViolationException
+        grupo.getUsuarios().clear();
+        repository.save(grupo); // necessário para persistir a alteração na tabela de junção
         repository.delete(grupo);
     }
+
 }

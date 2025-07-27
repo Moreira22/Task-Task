@@ -21,4 +21,10 @@ public class GrupoDTO implements Serializable{
     private String nome;
 
     private List<Usuario> usuarios;
+
+    public GrupoDTO(Integer idGrupo, String nome, List<Usuario> usuarios) {
+        this.idGrupo = idGrupo;
+        this.nome = nome;
+        this.usuarios = usuarios;
+    }
 }

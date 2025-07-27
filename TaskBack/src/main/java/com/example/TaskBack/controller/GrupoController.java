@@ -25,7 +25,7 @@ public class GrupoController {
 
     @GetMapping
     public ResponseEntity<List<GrupoDTO>> findAll() {
-        return new ResponseEntity<>(service.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(service.listAllGrupos(), HttpStatus.OK);
     }
 
     @GetMapping("/{idGrupo}")
